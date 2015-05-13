@@ -86,14 +86,15 @@ function testcases_create($fn, $customer, $data) {
 		exit;
 	}
 	
-	echo 'content ' . $data;
-	
 	if (_fwrite_stream($fp, json_encode($data)) === FALSE) {
 		echo 'Cant write to file ($path)';
 		exit;
 	}
+
 	echo 'The file ' . $path . ' was successfully created';
 	fclose($fp);
+	
+	return $
 }
 
 function _fwrite_stream($fp, $string) {
@@ -104,4 +105,20 @@ function _fwrite_stream($fp, $string) {
         }
     }
     return $written;
+}
+
+// Remove and replace the following:
+// the first '{' -> ''
+// the last  '}' -> ''
+//	"data": -> ''
+// the first "
+// the last "
+// ' -> "
+function replace($file) {
+	$content = file_get_contents($file);
+	$content = substr($content, 1, -1); 				// remove the first and the last curly brackets from file
+	$content = str_replace('"data":', "", $content);    // remove "data" keyword from file
+	$content = str_replace(''', '"', $content);			// replace all single quotes with double quotes
+	
+	return content;
 }
