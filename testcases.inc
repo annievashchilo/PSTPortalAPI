@@ -86,6 +86,7 @@ function testcases_create($fn, $customer, $data) {
 		exit;
 	}
 	
+	
 	if (_fwrite_stream($fp, json_encode($data)) === FALSE) {
 		echo 'Cant write to file ($path)';
 		exit;
@@ -93,11 +94,11 @@ function testcases_create($fn, $customer, $data) {
 
 	echo 'The file ' . $path . ' was successfully created';
 	fclose($fp);
-	
-	return $
+
 }
 
 function _fwrite_stream($fp, $string) {
+	$string = replace($string);
     for ($written = 0; $written < strlen($string); $written += $fwrite) {
         $fwrite = fwrite($fp, substr($string, $written));
         if ($fwrite === false) {
@@ -114,11 +115,12 @@ function _fwrite_stream($fp, $string) {
 // the first "
 // the last "
 // ' -> "
-function replace($file) {
-	$content = file_get_contents($file);
-	$content = substr($content, 1, -1); 				// remove the first and the last curly brackets from file
-	$content = str_replace('"data":', "", $content);    // remove "data" keyword from file
-	$content = str_replace(''', '"', $content);			// replace all single quotes with double quotes
+function replace($contents) {
+//	$content = file_get_contents($contents);
+	$contents = substr($contents, 1, -1); 				  	// remove the first and the last curly brackets from contents
+	$contents = str_replace('"data":', "", $contents);   	// remove "data" keyword from contents
+	$contents = str_replace("'", '"', $contents);			// replace all single quotes with double quotes
+	$contents = substr($contents, 1, -1); 					// then remove the first and the last unnecessary double quotes from contents
 	
-	return content;
+	return $contents;
 }
