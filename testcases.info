@@ -1,0 +1,7 @@
+name = Test Cases
+description = A module that enable test cases for execution
+core = 7.x
+dependencies[] = services
+files[] = testcases.module
+files[] = testcases.install
+files[] = testcases.inc

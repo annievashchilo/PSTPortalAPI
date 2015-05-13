@@ -1,0 +1,45 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the System module.
+ */
+/**
+ * Implements hook_install().
+ */
+function testcases_install() {
+  drupal_install_schema('testcases');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function testcases_uninstall() {
+  drupal_uninstall_schema('testcases');
+}
+
+
+/**
+* Implements hook_schema().
+*/
+function testcases_schema() {
+  return array(
+	'testcases' => array(
+	  'description' => 'Stores information about TC',
+	  'fields' => array(
+		'id' => array(
+		  'description' => 'The primary identifier for a TC.',
+		  'type' => 'serial',
+		  'unsigned' => TRUE,
+		  'not null' => TRUE,
+		),
+		'scenario' => array(
+		  'description' => t('The name of TS of the testcase'),
+		  'type' => 'varchar',
+		  'length' => 255,
+		  'not null' => TRUE,
+		),
+	  ),
+	  'primary key' => array('id'),
+	),
+  );
+}
