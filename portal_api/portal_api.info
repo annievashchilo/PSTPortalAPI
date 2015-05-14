@@ -1,0 +1,7 @@
+name = Portal API
+description = A module that updates the list with test cases for execution
+core = 7.x
+dependencies[] = services
+files[] = portal_api.module
+files[] = portal_api.install
+files[] = portal_api.inc

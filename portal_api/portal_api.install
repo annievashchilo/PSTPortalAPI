@@ -1,0 +1,45 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the System module.
+ */
+/**
+ * Implements hook_install().
+ */
+function portal_api_install() {
+  drupal_install_schema('portal_api');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function portal_api_uninstall() {
+  drupal_uninstall_schema('portal_api');
+}
+
+
+/**
+* Implements hook_schema().
+*/
+function portal_api_schema() {
+  return array(
+	'portal_api' => array(
+	  'description' => 'Stores information about TC',
+	  'fields' => array(
+		'id' => array(
+		  'description' => 'The primary identifier for a TC.',
+		  'type' => 'serial',
+		  'unsigned' => TRUE,
+		  'not null' => TRUE,
+		),
+		'scenario' => array(
+		  'description' => t('The name of TS of the testcase'),
+		  'type' => 'varchar',
+		  'length' => 255,
+		  'not null' => TRUE,
+		),
+	  ),
+	  'primary key' => array('id'),
+	),
+  );
+}

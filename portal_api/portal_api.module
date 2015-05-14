@@ -1,23 +1,23 @@
 <?php
 /**
  * @file
- * Attaches testcases data fields to Drupal entities.
+ * Attaches portal_api data fields to Drupal entities.
  */
  
 /**
  * Implements of hook_services_resources().
  */
-function testcases_services_resources() {
-  $myrestapi = array(
-    'testcases' => array(
+function portal_api_services_resources() {
+  $api = array(
+    'portal_api' => array(
       'operations' => array(
 			'retrieve' => array(
 				'help' => 'Retrieves test cases',
 				'file' => array(
 					'type' => 'inc',
-					'module' => 'testcases',
-					'name' => 'testcases'),
-				'callback' => 'testcases_retrieve',
+					'module' => 'portal_api',
+					'name' => 'portal_api'),
+				'callback' => 'portal_api_retrieve',
 				'access arguments' => array('view'),
 				'access arguments append' => FALSE,
 				'args' => array(
@@ -41,9 +41,9 @@ function testcases_services_resources() {
 			),
 			'update' => array(
 				'help' => 'Update testcases',
-				'file' => array('type' => 'inc', 'module' => 'testcases', 'name' => 'testcases'),
-				'callback' => 'testcases_update',
-				'access callback' => 'testcases_access',
+				'file' => array('type' => 'inc', 'module' => 'portal_api', 'name' => 'portal_api'),
+				'callback' => 'portal_api_update',
+				'access callback' => 'portal_api_access',
 				'access arguments' => array('update'),
 				'access arguments append' => TRUE,	
 				'args' => array(
@@ -73,9 +73,9 @@ function testcases_services_resources() {
 			),
 			'create' => array(
 			   'help' => 'Creates a json file with updated testcases',
-			   'file' => array('type' => 'inc', 'module' => 'testcases', 'name' => 'testcases'),
-			   'callback' => 'testcases_create',
-			   'access callback' => 'testcases_access',
+			   'file' => array('type' => 'inc', 'module' => 'portal_api', 'name' => 'portal_api'),
+			   'callback' => 'portal_api_create',
+			   'access callback' => 'portal_api_access',
 			   'access arguments' => array('create'),
 			   'access arguments append' => FALSE,
 			   'args' => array(
@@ -98,28 +98,29 @@ function testcases_services_resources() {
 						'name' => 'data',
 						'type' => 'struct',
 						'description' => 'The testcase data object',
-						'source' => array('param' => 'data'),
+						'source' => 'data',
 						'optional' => FALSE,
 					),
 				),
-			 ),
+			),
 		),
     ),
   );
   return
 
-$myrestapi;
+$api;
 }
+
 	/**
      * Implements hook_perm().
      */
-function testcases_perm() {
+function portal_api_perm() {
       return array(
-        'testcases resource create',
-        'testcases resource view any testcase',
-        'testcases resource view own testcase',
-        'testcases resource edit any testcase',
-        'testcases resource edit own testcase',
+        'portal_api resource create',
+        'portal_api resource view any testcase',
+        'portal_api resource view own testcase',
+        'portal_api resource edit any testcase',
+        'portal_api resource edit own testcase',
       );
 }
 
@@ -133,22 +134,22 @@ function testcases_perm() {
      * @return bool
      *  Whether access is given or not.
      */
-function testcases_access($op, $args) {
+function portal_api_access($op, $args) {
       global $user;
       $access = FALSE;
 
       switch ($op) {
         case 'view':
-          $access = user_access('testcases resource view any testcase');
-          $access = $access || $testcase->uid == $user->uid && user_access('testcase resource view own testcases');
+          $access = user_access('portal_api resource view any testcase');
+          $access = $access || $testcase->uid == $user->uid && user_access('portal_api resource view own testcases');
           break;
         case 'update':
-          $access = user_access('testcases resource edit any testcase');
-          $access = $access || $testcase->uid == $user->uid && user_access('note resource edit own testcases');
+          $access = user_access('portal_api resource edit any testcase');
+          $access = $access || $testcase->uid == $user->uid && user_access('portal_api resource edit own testcases');
           break;
 	  case 'create':
-          $access = user_access('testcases resource edit any testcase');
-          $access = $access || $testcase->uid == $user->uid && user_access('note resource edit own testcases');
+          $access = user_access('portal_api resource edit any testcase');
+          $access = $access || $testcase->uid == $user->uid && user_access('portal_api resource edit own testcases');
           break;
       }
 
@@ -158,12 +159,12 @@ function testcases_access($op, $args) {
 	/**
 	* connect 'our' api to ctools
 	*/
-function _testcases_ctools_plugin_api($owner, $api) {
+function _portal_api_ctools_plugin_api($owner, $api) {
   if ($owner == 'services' && $api == 'services') {
     return array(
       'version' => 3,
-      'file' => 'testcases.inc', // Optional parameter to indicate the file name to load.
-      'path' => drupal_get_path('module', 'testcases') . '/includes', // If specifying the file key, path is required.
+      'file' => 'portal_api.inc', // Optional parameter to indicate the file name to load.
+      'path' => drupal_get_path('module', 'portal_api') . '/includes', // If specifying the file key, path is required.
     );
   }
 }
@@ -172,18 +173,18 @@ function _testcases_ctools_plugin_api($owner, $api) {
 	/**
 	* function to define endpoint for services
 	*/
-function _testcases_default_services_endpoint() {
+function _portal_api_default_services_endpoint() {
       $endpoints = array();
 
       $endpoint = new stdClass;
       $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
-      $endpoint->name = 'myrestapi';
-      $endpoint->title = 'Testcases API';
+      $endpoint->name = 'api';
+      $endpoint->title = 'Portal API';
       $endpoint->server = 'rest_server';
-      $endpoint->path = 'myrestapi/testcases';
+      $endpoint->path = 'api/testcases';
       $endpoint->authentication = array();
       $endpoint->resources = array(
-        'testcases' => array(
+        'portal_api' => array(
           'alias' => 'content',
           'operations' => array(
 			'retrieve' => array(
